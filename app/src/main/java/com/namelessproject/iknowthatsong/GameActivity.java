@@ -212,12 +212,8 @@ public class GameActivity extends ActionBarActivity {
         erroAudio = MediaPlayer.create(this, R.raw.erro);
         erroAudio.start();
 
-/*        Paint paint2 = new Paint();        //設定文字顏色
-        paint2.setStyle(Paint.Style.FILL);
-        canvas.drawPaint(paint2);
-*/
         mp.stop();
-        //SystemClock.sleep(1500);
+        SystemClock.sleep(1000);
 
         newGuess();
     }
