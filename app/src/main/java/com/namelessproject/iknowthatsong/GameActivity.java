@@ -1,5 +1,6 @@
 package com.namelessproject.iknowthatsong;
 
+import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -25,6 +26,7 @@ public class GameActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         SongsManager songsManager = new SongsManager();
 
@@ -71,6 +73,7 @@ public class GameActivity extends ActionBarActivity {
 
             if(mp != null && mp.isPlaying()){
                 mp.stop();
+                mp.release();
             }
 
             String isUsed = "" ;
@@ -211,6 +214,12 @@ public class GameActivity extends ActionBarActivity {
         MediaPlayer erroAudio;
         erroAudio = MediaPlayer.create(this, R.raw.erro);
         erroAudio.start();
+        erroAudio.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
 
         mp.stop();
         SystemClock.sleep(1000);
@@ -220,6 +229,10 @@ public class GameActivity extends ActionBarActivity {
 
     public void audioPlayer(String path){
         //set up MediaPlayer
+
+        if(mp != null){
+            mp.release();
+        }
         mp = new MediaPlayer();
 
         try {
@@ -229,7 +242,11 @@ public class GameActivity extends ActionBarActivity {
             mp.prepare();
             //in miliseconds
             mp.seekTo((int)(mp.getDuration()*(rand.nextInt(90)/100.0)));
+
+            //mp.prepareAsync();
+
             mp.start();
+
         } catch (Exception e) {
             newGuess();
         }
