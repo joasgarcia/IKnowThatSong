@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
@@ -71,65 +73,26 @@ public class GameActivity extends ActionBarActivity {
                 mp.release();
             }
 
-            String isUsed = "";
-            int buttonKey;
-            boolean continueLoop = true;
+            ArrayList<Integer> listOfButtonKey = new ArrayList<Integer>(4);
+            listOfButtonKey.add(0);
+            listOfButtonKey.add(1);
+            listOfButtonKey.add(2);
+            listOfButtonKey.add(3);
+            Collections.shuffle(listOfButtonKey);
+            
+            Boolean isRightAnswer;
 
-            Random random = new Random();
+            for(Integer i = 0; i < listOfButtonKey.size(); i++) {
+                HashMap<String, String> song = getRandomSong();
 
-            int song = random.nextInt(listOfSong.size());
+                isRightAnswer = i.equals(0) ? true : false;
 
-            HashMap hash = (HashMap) listOfSong.get(song);
-            playSong(hash.get("songPath").toString());
-
-            while(continueLoop) {
-                buttonKey = random.nextInt(4);
-                if(!isUsed.contains(String.valueOf(buttonKey))){
-                    createButton(buttonKey, hash.get("songTitle").toString(), true);
-                    isUsed += "|" + String.valueOf(buttonKey);
-                    continueLoop = false;
+                if(isRightAnswer) {
+                    playSong(song.get("songPath"));
                 }
+
+                createButton(listOfButtonKey.get(i), song.get("songTitle"), isRightAnswer);
             }
-
-            song = random.nextInt(listOfSong.size());
-            hash = (HashMap) listOfSong.get(song);
-
-            continueLoop = true;
-            while(continueLoop) {
-                buttonKey = random.nextInt(4);
-                if (!isUsed.contains(String.valueOf(buttonKey))) {
-                    createButton(buttonKey, hash.get("songTitle").toString(), false);
-                    isUsed += "|" + String.valueOf(buttonKey);
-                    continueLoop = false;
-                }
-            }
-
-            song = random.nextInt(listOfSong.size());
-            hash = (HashMap) listOfSong.get(song);
-
-            continueLoop = true;
-            while(continueLoop) {
-                buttonKey = random.nextInt(4);
-                if (!isUsed.contains(String.valueOf(buttonKey))) {
-                    createButton(buttonKey, hash.get("songTitle").toString(), false);
-                    isUsed += "|" + String.valueOf(buttonKey);
-                    continueLoop = false;
-                }
-            }
-
-            song = random.nextInt(listOfSong.size());
-            hash = (HashMap) listOfSong.get(song);
-
-            continueLoop = true;
-            while(continueLoop) {
-                buttonKey = random.nextInt(4);
-                if (!isUsed.contains(String.valueOf(buttonKey))) {
-                    createButton(buttonKey, hash.get("songTitle").toString(), false);
-                    isUsed += "|" + String.valueOf(buttonKey);
-                    continueLoop = false;
-                }
-            }
-            //btnGuess.setEnabled(true);
         }
     }
 
@@ -232,5 +195,13 @@ public class GameActivity extends ActionBarActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private HashMap getRandomSong() {
+        //TODO Corrigir bug de trazer duas músicas iguais na
+        // mesma tentativa. Implementar uma lista que guarde as opções de músicas já sorteadas para aquela tentativa
+
+        Integer randomSongIndex = new Random().nextInt(this.listOfSong.size());
+        return (HashMap) listOfSong.get(randomSongIndex);
     }
 }
