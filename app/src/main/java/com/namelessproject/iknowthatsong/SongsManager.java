@@ -35,7 +35,7 @@ public class SongsManager {
                 }
             }
         }
-        // return songs list array
+        // return listOfSong list array
         return songsList;
     }
 

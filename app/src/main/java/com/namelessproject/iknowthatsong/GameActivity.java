@@ -17,9 +17,9 @@ import java.util.Random;
 import java.util.Timer;
 
 public class GameActivity extends ActionBarActivity {
-    /*Commit Hello World*/
+
     MediaPlayer mp;
-    ArrayList songs;
+    ArrayList listOfSong;
     Timer timerAnimation;
 
     @Override
@@ -29,8 +29,7 @@ public class GameActivity extends ActionBarActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         SongsManager songsManager = new SongsManager();
-
-        songs =  songsManager.getPlayList();
+        listOfSong = songsManager.getPlayList();
 
         /*timerAnimation = new Timer();
         timerAnimation.schedule(new TimerTask() {
@@ -43,7 +42,7 @@ public class GameActivity extends ActionBarActivity {
             }
         }, 10000, 0);*/
 
-        newGuess();
+        newAttempt();
     }
 
     @Override
@@ -65,27 +64,22 @@ public class GameActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void newGuess() {
-        if(!songs.isEmpty()){
-
-           /* Button btnGuess = (Button)findViewById(R.id.btn_guess);
-            btnGuess.setEnabled(false);*/
-
+    private void newAttempt() {
+        if(!listOfSong.isEmpty()){
             if(mp != null && mp.isPlaying()){
                 mp.stop();
                 mp.release();
             }
 
-            String isUsed = "" ;
+            String isUsed = "";
             int buttonKey;
-            int count = songs.size();
             boolean continueLoop = true;
 
             Random random = new Random();
 
-            int song = random.nextInt(count);
+            int song = random.nextInt(listOfSong.size());
 
-            HashMap hash = (HashMap)songs.get(song);
+            HashMap hash = (HashMap) listOfSong.get(song);
             audioPlayer(hash.get("songPath").toString());
 
             while(continueLoop) {
@@ -97,22 +91,8 @@ public class GameActivity extends ActionBarActivity {
                 }
             }
 
-
-            song = random.nextInt(count);
-            hash = (HashMap)songs.get(song);
-
-            continueLoop = true;
-            while(continueLoop) {
-                buttonKey = random.nextInt(4);
-                if (!isUsed.contains(String.valueOf(buttonKey))) {
-                    createButton(buttonKey, hash.get("songTitle").toString(), false);
-                    isUsed += "|" + String.valueOf(buttonKey);
-                    continueLoop = false;
-                }
-            }
-
-            song = random.nextInt(count);
-            hash = (HashMap)songs.get(song);
+            song = random.nextInt(listOfSong.size());
+            hash = (HashMap) listOfSong.get(song);
 
             continueLoop = true;
             while(continueLoop) {
@@ -124,8 +104,21 @@ public class GameActivity extends ActionBarActivity {
                 }
             }
 
-            song = random.nextInt(count);
-            hash = (HashMap)songs.get(song);
+            song = random.nextInt(listOfSong.size());
+            hash = (HashMap) listOfSong.get(song);
+
+            continueLoop = true;
+            while(continueLoop) {
+                buttonKey = random.nextInt(4);
+                if (!isUsed.contains(String.valueOf(buttonKey))) {
+                    createButton(buttonKey, hash.get("songTitle").toString(), false);
+                    isUsed += "|" + String.valueOf(buttonKey);
+                    continueLoop = false;
+                }
+            }
+
+            song = random.nextInt(listOfSong.size());
+            hash = (HashMap) listOfSong.get(song);
 
             continueLoop = true;
             while(continueLoop) {
@@ -140,91 +133,86 @@ public class GameActivity extends ActionBarActivity {
         }
     }
 
-    private void createButton(int btn_number, String songTitle, boolean isRight) {
-        Button btn_answer;
-        switch (btn_number) {
+    private void createButton(int buttonNumber, String songTitle, Boolean isRight) {
+        Button buttonAnswer;
+        switch (buttonNumber) {
             case 0:
-                btn_answer = (Button) findViewById(R.id.btn_0);
+                buttonAnswer = (Button) findViewById(R.id.btn_0);
                 break;
             case 1:
-                btn_answer = (Button) findViewById(R.id.btn_1);
+                buttonAnswer = (Button) findViewById(R.id.btn_1);
                 break;
             case 2:
-                btn_answer = (Button) findViewById(R.id.btn_2);
+                buttonAnswer = (Button) findViewById(R.id.btn_2);
                 break;
             case 3:
-                btn_answer = (Button) findViewById(R.id.btn_3);
+                buttonAnswer = (Button) findViewById(R.id.btn_3);
                 break;
             default:
-                btn_answer = (Button) findViewById(R.id.btn_0);
-                songTitle = "Fucking Error!";
+                buttonAnswer = (Button) findViewById(R.id.btn_0);
+                songTitle = "Error 4000004";
                 break;
         }
 
-
         if (songTitle != "") {
+            buttonAnswer.setVisibility(View.VISIBLE);
+            buttonAnswer.setEnabled(true);
 
-            btn_answer.setVisibility(View.VISIBLE);
-            btn_answer.setEnabled(true);
-
-            btn_answer.setText(songTitle);
+            buttonAnswer.setText(songTitle);
 
             if (isRight) {
-                btn_answer.setOnClickListener(new View.OnClickListener() {
+                buttonAnswer.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         rightAnswer();
+                        newAttempt();
                     }
                 });
             } else {
-                btn_answer.setOnClickListener(new View.OnClickListener() {
+                buttonAnswer.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         wrongAnswer();
+                        newAttempt();
                     }
                 });
             }
-        }else{
+        } else{
             timerAnimation.cancel();
             mp.stop();
-            btn_answer.setEnabled(false);
-            btn_answer.setVisibility(View.INVISIBLE);
+            buttonAnswer.setEnabled(false);
+            buttonAnswer.setVisibility(View.INVISIBLE);
         }
     }
 
     private void rightAnswer() {
-        TextView lbl = (TextView)findViewById(R.id.lbl_result);
+        TextView resultLabel = (TextView)findViewById(R.id.lbl_result);
+        resultLabel.setText("Acertou! ->");
 
-        lbl.setText("Acertooo! ->");
-
-        lbl = (TextView)findViewById(R.id.lbl_rightAnswer);
-
-        lbl.setText(String.valueOf(Integer.parseInt(lbl.getText().toString()) + 1));
-
-        newGuess();
+        TextView rightAnswerCounter = (TextView)findViewById(R.id.lbl_rightAnswer);
+        rightAnswerCounter.setText(String.valueOf(Integer.parseInt(rightAnswerCounter.getText().toString()) + 1));
     }
 
     private void wrongAnswer() {
-        TextView lbl = (TextView)findViewById(R.id.lbl_result);
+        TextView resultLabel = (TextView)findViewById(R.id.lbl_result);
+        resultLabel.setText("<- Errou!");
 
-        lbl.setText("<- Errooooo!");
+        TextView wrongAnswerCounter = (TextView)findViewById(R.id.lbl_wrongAnswer);
+        wrongAnswerCounter.setText(String.valueOf(Integer.parseInt(wrongAnswerCounter.getText().toString()) + 1));
 
-        lbl = (TextView)findViewById(R.id.lbl_wrongAnswer);
+        playErrorAudio();
+        mp.stop();
+        SystemClock.sleep(1000);
+    }
 
-        lbl.setText(String.valueOf(Integer.parseInt(lbl.getText().toString()) + 1));
-
-        MediaPlayer erroAudio;
-        erroAudio = MediaPlayer.create(this, R.raw.erro);
-        erroAudio.start();
-        erroAudio.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+    private void playErrorAudio() {
+        MediaPlayer errorAudio;
+        errorAudio = MediaPlayer.create(this, R.raw.erro);
+        errorAudio.start();
+        errorAudio.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 mp.release();
             }
         });
-
-        mp.stop();
-        SystemClock.sleep(1000);
-
-        newGuess();
     }
 
     public void audioPlayer(String path){
@@ -248,7 +236,7 @@ public class GameActivity extends ActionBarActivity {
             mp.start();
 
         } catch (Exception e) {
-            newGuess();
+            newAttempt();
         }
     }
 }
