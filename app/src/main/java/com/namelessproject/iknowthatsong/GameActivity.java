@@ -80,7 +80,7 @@ public class GameActivity extends ActionBarActivity {
             int song = random.nextInt(listOfSong.size());
 
             HashMap hash = (HashMap) listOfSong.get(song);
-            audioPlayer(hash.get("songPath").toString());
+            playSong(hash.get("songPath").toString());
 
             while(continueLoop) {
                 buttonKey = random.nextInt(4);
@@ -215,28 +215,22 @@ public class GameActivity extends ActionBarActivity {
         });
     }
 
-    public void audioPlayer(String path){
-        //set up MediaPlayer
-
-        if(mp != null){
-            mp.release();
+    public void playSong(String path){
+        if(this.mp != null){
+            this.mp.release();
         }
-        mp = new MediaPlayer();
+
+        this.mp = new MediaPlayer();
 
         try {
             Random rand = new Random();
 
-            mp.setDataSource(path);
-            mp.prepare();
-            //in miliseconds
-            mp.seekTo((int)(mp.getDuration()*(rand.nextInt(90)/100.0)));
-
-            //mp.prepareAsync();
-
-            mp.start();
-
+            this.mp.setDataSource(path);
+            this.mp.prepare();
+            this.mp.seekTo((int)(mp.getDuration()*(rand.nextInt(90)/100.0)));
+            this.mp.start();
         } catch (Exception e) {
-            newAttempt();
+            e.printStackTrace();
         }
     }
 }
