@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -23,14 +24,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends ActionBarActivity {
     MediaPlayer mp;
     ArrayList<HashMap<String, String>> listOfSong;
     ArrayList<HashMap<String, String>> listOfCurrentSongs = new ArrayList();
-    Timer timerAnimation;
     private SharedPreferences gamePrefs;
     public static final String GAME_PREFS = "ScoreFile";
+    TextView timerLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +44,19 @@ public class GameActivity extends ActionBarActivity {
         SongsManager songsManager = new SongsManager();
         listOfSong = songsManager.getPlayList();
 
-        /*timerAnimation = new Timer();
-        timerAnimation.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                createButton(0, "", false);
-                createButton(1, "", false);
-                createButton(2, "", false);
-                createButton(3, "", false);
+        timerLabel = (TextView)findViewById(R.id.txt_timer);
+
+        new CountDownTimer(60000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                timerLabel.setText(new SimpleDateFormat("ss").format(new Date(millisUntilFinished)));
             }
-        }, 10000, 0);*/
+
+            public void onFinish() {
+                TextView _tv = (TextView)findViewById(R.id.txt_timer);
+                _tv.setText("done!");
+            }
+        }.start();
 
         newAttempt();
     }
@@ -65,9 +70,6 @@ public class GameActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -188,7 +190,7 @@ public class GameActivity extends ActionBarActivity {
                 });
             }
         } else{
-            timerAnimation.cancel();
+            //timer.cancel();
             mp.stop();
             buttonAnswer.setEnabled(false);
             buttonAnswer.setVisibility(View.INVISIBLE);
@@ -303,7 +305,6 @@ public class GameActivity extends ActionBarActivity {
                 scoreEdit.putString("highScores", "" + dateOutput + " - " + score);
                 scoreEdit.commit();
             }
-
         }
     }
 }
