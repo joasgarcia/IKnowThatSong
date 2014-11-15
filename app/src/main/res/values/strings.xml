@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_game">GameActivity</string>
     <string name="title_activity_high_score">HighScoreActivity</string>
+    <string name="title_activity_game_over">GameOverActivity</string>
 
 </resources>

@@ -17,20 +17,19 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btn_guess = (Button)findViewById(R.id.btn_guess);
+        Button btnNewAttempt = (Button)findViewById(R.id.btn_guess);
         context = this;
 
-        btn_guess.setOnClickListener(new View.OnClickListener() {
+        btnNewAttempt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(context, GameActivity.class);
                 startActivity(i);
             }
         });
 
-        Button btn_scores = (Button)findViewById(R.id.btn_scores);
-        context = this;
+        Button btnHighScores = (Button)findViewById(R.id.btn_scores);
 
-        btn_scores.setOnClickListener(new View.OnClickListener() {
+        btnHighScores.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(context, HighScoreActivity.class);
                 startActivity(i);
