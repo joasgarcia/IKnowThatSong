@@ -25,9 +25,9 @@ import java.util.Random;
 import java.util.Timer;
 
 public class GameActivity extends ActionBarActivity {
-
     MediaPlayer mp;
-    ArrayList listOfSong;
+    ArrayList<HashMap<String, String>> listOfSong;
+    ArrayList<HashMap<String, String>> listOfCurrentSongs = new ArrayList();
     Timer timerAnimation;
     private SharedPreferences gamePrefs;
     public static final String GAME_PREFS = "ScoreFile";
@@ -119,6 +119,8 @@ public class GameActivity extends ActionBarActivity {
                 mp.release();
             }
 
+            listOfCurrentSongs = new ArrayList<HashMap<String, String>>();
+
             ArrayList<Integer> listOfButtonKey = new ArrayList<Integer>(4);
             listOfButtonKey.add(0);
             listOfButtonKey.add(1);
@@ -130,8 +132,9 @@ public class GameActivity extends ActionBarActivity {
 
             for(Integer i = 0; i < listOfButtonKey.size(); i++) {
                 HashMap<String, String> song = getRandomSong();
+                this.listOfCurrentSongs.add(song);
 
-                isRightAnswer = i.equals(0) ? true : false;
+                isRightAnswer = i.equals(0);
 
                 if(isRightAnswer) {
                     playSong(song.get("songPath"));
@@ -243,12 +246,23 @@ public class GameActivity extends ActionBarActivity {
         }
     }
 
-    private HashMap getRandomSong() {
+    private HashMap<String, String> getRandomSong() {
         //TODO Corrigir bug de trazer duas músicas iguais na
         // mesma tentativa. Implementar uma lista que guarde as opções de músicas já sorteadas para aquela tentativa
+        Boolean exists = true;
+        HashMap<String, String> selectedSong = new HashMap<String, String>();
+        Integer count = 0;
+        while(exists) {
+            Integer randomSongIndex = new Random().nextInt(this.listOfSong.size());
+            selectedSong = listOfSong.get(randomSongIndex);
+            count++;
 
-        Integer randomSongIndex = new Random().nextInt(this.listOfSong.size());
-        return (HashMap) listOfSong.get(randomSongIndex);
+            if(!this.listOfCurrentSongs.contains(selectedSong)) {
+                exists = false;
+            }
+        }
+
+        return selectedSong;
     }
 
     private void setHighScore(){
