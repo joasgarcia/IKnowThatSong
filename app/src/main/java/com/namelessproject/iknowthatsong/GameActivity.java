@@ -37,7 +37,7 @@ public class GameActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        gamePrefs = getSharedPreferences(GAME_PREFS, 0);
+        gamePrefs = getSharedPreferences(GAME_PREFS, MODE_PRIVATE);
 
         SongsManager songsManager = new SongsManager();
         listOfSong = songsManager.getPlayList();
