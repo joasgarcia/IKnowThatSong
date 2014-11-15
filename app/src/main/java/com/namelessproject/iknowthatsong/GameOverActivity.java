@@ -4,6 +4,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
 import com.namelessproject.iknowthatsong.R;
 
 public class GameOverActivity extends ActionBarActivity {
@@ -12,6 +14,14 @@ public class GameOverActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String score = extras.getString("SCORE");
+            TextView scoreLabel = (TextView)findViewById(R.id.scoreLabel);
+
+            scoreLabel.setText(score);
+        }
     }
 
 

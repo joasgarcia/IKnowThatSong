@@ -1,5 +1,6 @@
 package com.namelessproject.iknowthatsong;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
@@ -35,7 +36,7 @@ public class GameActivity extends ActionBarActivity {
     TextView timerLabel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -53,8 +54,10 @@ public class GameActivity extends ActionBarActivity {
             }
 
             public void onFinish() {
-                TextView _tv = (TextView)findViewById(R.id.txt_timer);
-                _tv.setText("done!");
+                TextView rightAnswerCounter = (TextView)findViewById(R.id.lbl_rightAnswer);
+                Intent i = new Intent(getApplicationContext(), GameOverActivity.class);
+                i.putExtra("SCORE", rightAnswerCounter.getText());
+                startActivity(i);
             }
         }.start();
 
