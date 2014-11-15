@@ -1,5 +1,6 @@
 package com.namelessproject.iknowthatsong;
 
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -10,11 +11,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 
@@ -23,12 +29,15 @@ public class GameActivity extends ActionBarActivity {
     MediaPlayer mp;
     ArrayList listOfSong;
     Timer timerAnimation;
+    private SharedPreferences gamePrefs;
+    public static final String GAME_PREFS = "ScoreFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        gamePrefs = getSharedPreferences(GAME_PREFS, 0);
 
         SongsManager songsManager = new SongsManager();
         listOfSong = songsManager.getPlayList();
@@ -64,6 +73,43 @@ public class GameActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        setHighScore();
+        if(mp != null && mp.isPlaying()){
+            mp.stop();
+            mp.release();
+        }
+        super.onDestroy();
+        //Mostra uma msg na tela.. pode ser bom saber..
+        //Toast.makeText(getApplicationContext(),"16. onDestroy()", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPause()
+    {
+        if(mp != null && mp.isPlaying()){
+            mp.stop();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        if(mp != null && !mp.isPlaying()){
+            try {
+                mp.prepare();
+                mp.start();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void newAttempt() {
@@ -113,7 +159,7 @@ public class GameActivity extends ActionBarActivity {
                 break;
             default:
                 buttonAnswer = (Button) findViewById(R.id.btn_0);
-                songTitle = "Error 4000004";
+                songTitle = "Error 400004";
                 break;
         }
 
@@ -203,5 +249,47 @@ public class GameActivity extends ActionBarActivity {
 
         Integer randomSongIndex = new Random().nextInt(this.listOfSong.size());
         return (HashMap) listOfSong.get(randomSongIndex);
+    }
+
+    private void setHighScore(){
+        TextView rightAnswerCounter = (TextView)findViewById(R.id.lbl_rightAnswer);
+        int score = Integer.parseInt(rightAnswerCounter.getText().toString());
+
+        if(score>0){
+            SharedPreferences.Editor scoreEdit = gamePrefs.edit();
+            DateFormat dateForm = new SimpleDateFormat("dd/MM/yyyy");
+            String dateOutput = dateForm.format(new Date());
+            String listOfScores = gamePrefs.getString("highScores", "");
+
+            if(listOfScores.length()>0){
+
+                List<Score> scoreStrings = new ArrayList<Score>();
+                String[] exScores = listOfScores.split("\\|");
+
+                for(String eSc : exScores){
+                    String[] parts = eSc.split(" - ");
+                    scoreStrings.add(new Score(parts[0], Integer.parseInt(parts[1])));
+                }
+                Score newScore = new Score(dateOutput, score);
+                scoreStrings.add(newScore);
+
+                Collections.sort(scoreStrings);
+
+                StringBuilder scoreBuild = new StringBuilder("");
+                for(int s=0; s<scoreStrings.size(); s++){
+                    if(s>=10) break;//only want ten
+                    if(s>0) scoreBuild.append("|");//pipe separate the score strings
+                    scoreBuild.append(scoreStrings.get(s).getScoreText());
+                }
+                //write to prefs
+                scoreEdit.putString("highScores", scoreBuild.toString());
+                scoreEdit.commit();
+            }
+            else{
+                scoreEdit.putString("highScores", "" + dateOutput + " - " + score);
+                scoreEdit.commit();
+            }
+
+        }
     }
 }

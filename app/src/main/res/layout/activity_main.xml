@@ -6,7 +6,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/blue_background">
 
     <TextView
         android:text="Qual é música?"
@@ -14,7 +15,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/lbl_title"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="36dp"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -23,6 +25,17 @@
         android:id="@+id/btn_guess"
         android:layout_below="@+id/lbl_title"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="59dp"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="High Scores"
+        android:id="@+id/btn_scores"
+        android:layout_below="@+id/btn_guess"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="69dp"
         android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

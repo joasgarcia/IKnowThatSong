@@ -26,6 +26,16 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(i);
             }
         });
+
+        Button btn_scores = (Button)findViewById(R.id.btn_scores);
+        context = this;
+
+        btn_scores.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(context, HighScoreActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
