@@ -20,6 +20,7 @@ public class MainActivity extends ActionBarActivity {
         final Button btnNewAttempt = (Button)findViewById(R.id.btn_guess);
         context = this;
 
+        btnNewAttempt.setEnabled(true);
         btnNewAttempt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 btnNewAttempt.setEnabled(false);
