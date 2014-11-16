@@ -2,11 +2,14 @@ package com.namelessproject.iknowthatsong;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
@@ -15,15 +18,16 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
         final Button btnNewAttempt = (Button)findViewById(R.id.btn_guess);
         context = this;
 
-        btnNewAttempt.setEnabled(true);
         btnNewAttempt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                btnNewAttempt.setEnabled(false);
                 Intent i = new Intent(context, GameActivity.class);
                 startActivity(i);
             }
