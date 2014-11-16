@@ -17,11 +17,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnNewAttempt = (Button)findViewById(R.id.btn_guess);
+        final Button btnNewAttempt = (Button)findViewById(R.id.btn_guess);
         context = this;
 
         btnNewAttempt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                btnNewAttempt.setEnabled(false);
                 Intent i = new Intent(context, GameActivity.class);
                 startActivity(i);
             }

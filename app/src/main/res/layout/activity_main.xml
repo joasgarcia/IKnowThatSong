@@ -10,13 +10,14 @@
     android:background="@drawable/blue_background">
 
     <TextView
-        android:text="Qual é música?"
+        android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/lbl_title"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="36dp"/>
+        android:textSize="36dp"
+        android:background="@drawable/qual_e_a_musica"/>
 
     <Button
         android:layout_width="wrap_content"

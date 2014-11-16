@@ -31,36 +31,22 @@ public class GameActivity extends ActionBarActivity {
     MediaPlayer mp;
     ArrayList<HashMap<String, String>> listOfSong;
     ArrayList<HashMap<String, String>> listOfCurrentSongs = new ArrayList();
-    private SharedPreferences gamePrefs;
-    public static final String GAME_PREFS = "ScoreFile";
     TextView timerLabel;
+    int hitSequence = 0;
+    CountDownTimer counter;
+    int timeLeft;
+    //(qtdeAcertos*500) + ((10/tempoResposta)*300) -> inteiro
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        gamePrefs = getSharedPreferences(GAME_PREFS, MODE_PRIVATE);
 
         SongsManager songsManager = new SongsManager();
         listOfSong = songsManager.getPlayList();
 
-        timerLabel = (TextView)findViewById(R.id.txt_timer);
-
-        new CountDownTimer(60000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                timerLabel.setText(new SimpleDateFormat("ss").format(new Date(millisUntilFinished)));
-            }
-
-            public void onFinish() {
-                TextView rightAnswerCounter = (TextView)findViewById(R.id.lbl_rightAnswer);
-                Intent i = new Intent(getApplicationContext(), GameOverActivity.class);
-                i.putExtra("SCORE", rightAnswerCounter.getText());
-                startActivity(i);
-            }
-        }.start();
-
+        createTimer(60000);
         newAttempt();
     }
 
@@ -83,8 +69,8 @@ public class GameActivity extends ActionBarActivity {
     @Override
     public void onDestroy()
     {
-        setHighScore();
         if(mp != null && mp.isPlaying()){
+            counter.cancel();
             mp.stop();
             mp.release();
         }
@@ -97,6 +83,9 @@ public class GameActivity extends ActionBarActivity {
     public void onPause()
     {
         if(mp != null && mp.isPlaying()){
+            TextView timer = (TextView)findViewById(R.id.txt_timer);
+            timeLeft = Integer.parseInt(timer.getText().toString());
+            counter.cancel();
             mp.stop();
         }
         super.onPause();
@@ -108,6 +97,9 @@ public class GameActivity extends ActionBarActivity {
         super.onStart();
         if(mp != null && !mp.isPlaying()){
             try {
+                if(timeLeft>1) {
+                    createTimer(timeLeft * 1000);
+                }
                 mp.prepare();
                 mp.start();
             }
@@ -115,6 +107,24 @@ public class GameActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void createTimer(int miliseconds){
+        timerLabel = (TextView)findViewById(R.id.txt_timer);
+
+        counter = new CountDownTimer(miliseconds, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                timerLabel.setText(new SimpleDateFormat("ss").format(new Date(millisUntilFinished)));
+            }
+
+            public void onFinish() {
+                TextView rightAnswerCounter = (TextView)findViewById(R.id.lbl_rightAnswer);
+                Intent i = new Intent(getApplicationContext(), GameOverActivity.class);
+                i.putExtra("SCORE", rightAnswerCounter.getText());
+                startActivity(i);
+            }
+        }.start();
     }
 
     private void newAttempt() {
@@ -180,15 +190,19 @@ public class GameActivity extends ActionBarActivity {
             if (isRight) {
                 buttonAnswer.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+                        setButtonEnabled(false);
                         rightAnswer();
                         newAttempt();
+                        setButtonEnabled(true);
                     }
                 });
             } else {
                 buttonAnswer.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+                        setButtonEnabled(false);
                         wrongAnswer();
                         newAttempt();
+                        setButtonEnabled(true);
                     }
                 });
             }
@@ -205,12 +219,19 @@ public class GameActivity extends ActionBarActivity {
         resultLabel.setText("Acertou! ->");
 
         TextView rightAnswerCounter = (TextView)findViewById(R.id.lbl_rightAnswer);
-        rightAnswerCounter.setText(String.valueOf(Integer.parseInt(rightAnswerCounter.getText().toString()) + 1));
+
+        int points = Integer.parseInt(rightAnswerCounter.getText().toString());
+        hitSequence += 1;
+        points += 2*hitSequence;
+
+        rightAnswerCounter.setText(String.valueOf(points));
     }
 
     private void wrongAnswer() {
         TextView resultLabel = (TextView)findViewById(R.id.lbl_result);
         resultLabel.setText("<- Errou!");
+
+        hitSequence = 0;
 
         TextView wrongAnswerCounter = (TextView)findViewById(R.id.lbl_wrongAnswer);
         wrongAnswerCounter.setText(String.valueOf(Integer.parseInt(wrongAnswerCounter.getText().toString()) + 1));
@@ -218,6 +239,20 @@ public class GameActivity extends ActionBarActivity {
         playErrorAudio();
         mp.stop();
         SystemClock.sleep(1000);
+    }
+
+    private void setButtonEnabled(Boolean enabled) {
+        Button btn_0, btn_1, btn_2, btn_3;
+
+        btn_0 = (Button) findViewById(R.id.btn_0);
+        btn_1 = (Button) findViewById(R.id.btn_1);
+        btn_2 = (Button) findViewById(R.id.btn_2);
+        btn_3 = (Button) findViewById(R.id.btn_3);
+
+        btn_0.setEnabled(enabled);
+        btn_1.setEnabled(enabled);
+        btn_2.setEnabled(enabled);
+        btn_3.setEnabled(enabled);
     }
 
     private void playErrorAudio() {
@@ -268,46 +303,5 @@ public class GameActivity extends ActionBarActivity {
         }
 
         return selectedSong;
-    }
-
-    private void setHighScore(){
-        TextView rightAnswerCounter = (TextView)findViewById(R.id.lbl_rightAnswer);
-        int score = Integer.parseInt(rightAnswerCounter.getText().toString());
-
-        if(score>0){
-            SharedPreferences.Editor scoreEdit = gamePrefs.edit();
-            DateFormat dateForm = new SimpleDateFormat("dd/MM/yyyy");
-            String dateOutput = dateForm.format(new Date());
-            String listOfScores = gamePrefs.getString("highScores", "");
-
-            if(listOfScores.length()>0){
-
-                List<Score> scoreStrings = new ArrayList<Score>();
-                String[] exScores = listOfScores.split("\\|");
-
-                for(String eSc : exScores){
-                    String[] parts = eSc.split(" - ");
-                    scoreStrings.add(new Score(parts[0], Integer.parseInt(parts[1])));
-                }
-                Score newScore = new Score(dateOutput, score);
-                scoreStrings.add(newScore);
-
-                Collections.sort(scoreStrings);
-
-                StringBuilder scoreBuild = new StringBuilder("");
-                for(int s=0; s<scoreStrings.size(); s++){
-                    if(s>=10) break;//only want ten
-                    if(s>0) scoreBuild.append("|");//pipe separate the score strings
-                    scoreBuild.append(scoreStrings.get(s).getScoreText());
-                }
-                //write to prefs
-                scoreEdit.putString("highScores", scoreBuild.toString());
-                scoreEdit.commit();
-            }
-            else{
-                scoreEdit.putString("highScores", "" + dateOutput + " - " + score);
-                scoreEdit.commit();
-            }
-        }
     }
 }

@@ -17,8 +17,10 @@
         android:id="@+id/btn_0"
         android:visibility="invisible"
         android:layout_below="@+id/txt_timer"
-        android:layout_toRightOf="@+id/lbl_wrongAnswer"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+         />
 
     <Button
         android:layout_width="wrap_content"
@@ -27,7 +29,9 @@
         android:id="@+id/btn_1"
         android:visibility="invisible"
         android:layout_below="@+id/btn_0"
-        android:layout_alignRight="@+id/lbl_rightAnswer" />
+        android:layout_alignRight="@+id/lbl_rightAnswer"
+        android:layout_alignParentLeft="true"
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -36,7 +40,9 @@
         android:id="@+id/btn_2"
         android:visibility="invisible"
         android:layout_below="@+id/btn_1"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+         />
 
     <Button
         android:layout_width="wrap_content"
@@ -44,7 +50,9 @@
         android:id="@+id/btn_3"
         android:visibility="invisible"
         android:layout_below="@+id/btn_2"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        />
 
     <TextView
         android:layout_width="wrap_content"
