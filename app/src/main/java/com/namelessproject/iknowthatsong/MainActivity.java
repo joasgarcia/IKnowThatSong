@@ -12,10 +12,13 @@ import android.widget.Button;
 public class MainActivity extends ActionBarActivity {
 
     Context context;
+    public AppSession appSession;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        appSession = (AppSession) getApplicationContext();
 
         Button btnNewAttempt = (Button)findViewById(R.id.btn_guess);
         context = this;

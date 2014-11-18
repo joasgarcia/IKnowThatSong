@@ -31,12 +31,15 @@ public class GameActivity extends ActionBarActivity {
     Timer timerAnimation;
     private SharedPreferences gamePrefs;
     public static final String GAME_PREFS = "ScoreFile";
+    public AppSession appSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        appSession = (AppSession) getApplicationContext();
         gamePrefs = getSharedPreferences(GAME_PREFS, MODE_PRIVATE);
 
         SongsManager songsManager = new SongsManager();
