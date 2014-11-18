@@ -1,7 +1,6 @@
 package com.namelessproject.iknowthatsong;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -15,24 +14,18 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class GameActivity extends ActionBarActivity {
     MediaPlayer mp;
     ArrayList<HashMap<String, String>> listOfSong;
-    ArrayList<HashMap<String, String>> listOfCurrentSongs = new ArrayList();
+    ArrayList<HashMap<String, String>> listOfCurrentSongs = new ArrayList<HashMap<String, String>>();
     public AppSession appSession;
     TextView timerLabel;
     int hitSequence = 0;
