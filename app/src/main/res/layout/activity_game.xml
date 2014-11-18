@@ -15,10 +15,12 @@
         android:layout_height="wrap_content"
         android:text=""
         android:id="@+id/btn_0"
-        android:layout_marginTop="48dp"
         android:visibility="invisible"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_below="@+id/txt_timer"
+        android:layout_marginTop="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+         />
 
     <Button
         android:layout_width="wrap_content"
@@ -27,7 +29,9 @@
         android:id="@+id/btn_1"
         android:visibility="invisible"
         android:layout_below="@+id/btn_0"
-        android:layout_alignRight="@+id/lbl_rightAnswer" />
+        android:layout_alignRight="@+id/lbl_rightAnswer"
+        android:layout_alignParentLeft="true"
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -36,7 +40,9 @@
         android:id="@+id/btn_2"
         android:visibility="invisible"
         android:layout_below="@+id/btn_1"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+         />
 
     <Button
         android:layout_width="wrap_content"
@@ -44,7 +50,9 @@
         android:id="@+id/btn_3"
         android:visibility="invisible"
         android:layout_below="@+id/btn_2"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -72,5 +80,15 @@
         android:id="@+id/lbl_rightAnswer"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="60"
+        android:id="@+id/txt_timer"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="36dp"/>
 
 </RelativeLayout>
