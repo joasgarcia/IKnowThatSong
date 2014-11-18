@@ -24,7 +24,6 @@ import java.util.Random;
 
 public class GameActivity extends ActionBarActivity {
     MediaPlayer mp;
-    ArrayList<HashMap<String, String>> listOfSong;
     ArrayList<HashMap<String, String>> listOfCurrentSongs = new ArrayList<HashMap<String, String>>();
     public AppSession appSession;
     TextView timerLabel;
@@ -41,9 +40,6 @@ public class GameActivity extends ActionBarActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         appSession = (AppSession) getApplicationContext();
         setContentView(R.layout.activity_game);
-
-        SongsManager songsManager = new SongsManager();
-        listOfSong = songsManager.getPlayList();
 
         createTimer(60000);
         newAttempt();
@@ -127,7 +123,7 @@ public class GameActivity extends ActionBarActivity {
     }
 
     private void newAttempt() {
-        if(!listOfSong.isEmpty()){
+        if(!appSession.getListOfSong().isEmpty()){
             if(mp != null && mp.isPlaying()){
                 mp.stop();
                 mp.release();
@@ -292,8 +288,8 @@ public class GameActivity extends ActionBarActivity {
         HashMap<String, String> selectedSong = new HashMap<String, String>();
         Integer count = 0;
         while(exists) {
-            Integer randomSongIndex = new Random().nextInt(this.listOfSong.size());
-            selectedSong = listOfSong.get(randomSongIndex);
+            Integer randomSongIndex = new Random().nextInt(appSession.getListOfSong().size());
+            selectedSong = appSession.getListOfSong().get(randomSongIndex);
             count++;
 
             if(!this.listOfCurrentSongs.contains(selectedSong)) {

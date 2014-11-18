@@ -24,7 +24,13 @@ public class MainActivity extends ActionBarActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
+
         appSession = (AppSession) getApplicationContext();
+
+        if(appSession.getListOfSong().size() == 0) {
+            SongsManager songsManager = new SongsManager();
+            appSession.setListOfSong(songsManager.getPlayList());
+        }
 
         final Button btnNewAttempt = (Button)findViewById(R.id.btn_guess);
         context = this;

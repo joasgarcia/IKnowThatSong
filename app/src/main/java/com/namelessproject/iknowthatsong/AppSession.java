@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class AppSession extends Application {
     private ArrayList<HashMap<String, String>> listOfSong = new ArrayList<HashMap<String, String>>();
 
-    public void setListOfSonng(ArrayList<HashMap<String, String>> listOfSong) {
+    public void setListOfSong(ArrayList<HashMap<String, String>> listOfSong) {
         this.listOfSong = listOfSong;
     }
 
