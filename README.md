@@ -1,4 +1,4 @@
 IKnowThatSong
 =============
 
-Qual é a música? Maoe
+Utiliza o Android Studio 0.8 BETA
